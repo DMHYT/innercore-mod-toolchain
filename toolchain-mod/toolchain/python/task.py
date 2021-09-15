@@ -2,6 +2,7 @@ import os
 import os.path
 import sys
 import time
+import urllib.request as request
 
 from utils import ensure_directory, ensure_file_dir, clear_directory, copy_file, copy_directory
 
@@ -227,17 +228,95 @@ def stop_horizon():
 	
 @task("loadDocs")
 def task_load_docs():
-	import urllib.request
-	print("downloading...")
-	response = urllib.request.urlopen("https://docs.mineprogramming.org/core-engine.d.ts")
-	content = response.read().decode('utf-8')
-
-	with open(make_config.get_path("toolchain/declarations/core-engine.d.ts"), 'w') as docs:
-		docs.write(content)
-
+	def _load(name, fromDocs=True, fileName=None):
+		url = ("https://docs.mineprogramming.org/" + name + ".d.ts") if fromDocs else name
+		response = request.urlopen(url)
+		content = response.read().decode('utf-8')
+		if fileName == None:
+			fileName = name
+		with open(make_config.get_path("toolchain/declarations/" + fileName + ".d.ts"), 'w') as docs:
+			docs.write(content)
+		print(fileName + ".d.ts downloaded")
+	print("downloading ts declarations...")
+	_load("core-engine")
+	_load("android")
+	_load("android-declarations")
+	_load("https://raw.githubusercontent.com/DMHYT/innercore-development-cloud/main/preloader.d.ts", fromDocs=False, fileName="preloader")
 	print("complete!")
 	return 0
 
+@task("loadJavaDependencies")
+def task_load_java_dependencies():
+	def _load(name):
+		url = "https://github.com/DMHYT/innercore-development-cloud/blob/main/classpath/" + name + ".jar?raw=true"
+		local_path = make_config.get_path("toolchain/classpath/" + name + ".jar")
+		request.urlretrieve(url, filename=local_path)
+		print(name + ".jar downloaded")
+	print("downloading java dependencies...")
+	_load("android-support-multidex")
+	_load("android-support-v4")
+	_load("android-support-v7-recyclerview")
+	_load("android")
+	_load("classes-dex2jar")
+	_load("classes2-dex2jar")
+	_load("horizon-classes")
+	_load("rhino-1.7.7")
+	print("complete!")
+	return 0
+
+@task("loadAdbAndBin")
+def task_load_adb_and_bin():
+	adb = make_config.get_path("toolchain/adb")
+	if not os.path.exists(adb):
+		os.mkdir(adb)
+	bn = make_config.get_path("toolchain/bin")
+	if not os.path.exists(bn):
+		os.mkdir(bn)
+	if not os.path.exists(bn + "\\gradle"):
+		os.mkdir(bn + "\\gradle")
+		os.mkdir(bn + "\\gradle\\wrapper")
+	elif not os.path.exists(bn + "\\gradle\\wrapper"):
+		os.mkdir(bn + "\\gradle\\wrapper")
+	def _load(path):
+		url = "https://github.com/DMHYT/innercore-development-cloud/blob/main/" + path + "?raw=true"
+		local_path = make_config.get_path("toolchain/" + path)
+		request.urlretrieve(url, filename=local_path)
+		print(path + " downloaded")
+	print("downloading adb...")
+	_load("adb/AdbWinApi.dll")
+	_load("adb/AdbWinUsbApi.dll")
+	_load("adb/adb.exe")
+	print("complete!")
+	print("downloading java tools...")
+	_load("bin/gradle/wrapper/gradle-wrapper.jar")
+	_load("bin/gradle/wrapper/gradle-wrapper.properties")
+	_load("bin/dx.jar")
+	_load("bin/fakeso.cpp")
+	_load("bin/gradlew")
+	_load("bin/gradlew.bat")
+	print("complete!")
+
+@task("downloadNdkIfNeeded")
+def task_download_ndk_if_needed():
+	from native.native_setup import require_compiler_executable
+	print("preparing ndk...")
+	require_compiler_executable(arch="arm", install_if_required=True)
+	print("ndk was locally downloaded successfully!")
+	return 0
+
+@task("cleanupOutput")
+def task_cleanup_output():
+	def clean(p):
+		folders = [f for f in list(os.walk(p))[1:] if os.path.exists(f[0])]
+		for folder in folders:
+			if not folder[2]:
+				os.rmdir(folder[0])
+			else:
+				clean(folder[0])
+	path = make_config.get_path("output")
+	if os.path.exists(path):
+		clean(path)
+	return 0
 
 @task("connectToADB")
 def task_connect_to_adb():
