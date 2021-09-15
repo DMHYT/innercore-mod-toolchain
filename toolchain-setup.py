@@ -35,7 +35,7 @@ def download_and_extract_toolchain(directory):
     archive = os.path.join(directory, 'toolchain.zip')
 
     if not os.path.exists(archive):
-        url = "https://codeload.github.com/zheka2304/innercore-mod-toolchain/zip/master"
+        url = "https://codeload.github.com/DMHYT/innercore-mod-toolchain/zip/master"
         print("downloading toolchain archive from " + url)
         urllib.request.urlretrieve(url, archive)
     else: 
