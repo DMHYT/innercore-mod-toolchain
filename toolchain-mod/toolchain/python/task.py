@@ -295,6 +295,7 @@ def task_load_adb_and_bin():
 	_load("bin/gradlew")
 	_load("bin/gradlew.bat")
 	print("complete!")
+	return 0
 
 @task("downloadNdkIfNeeded")
 def task_download_ndk_if_needed():
