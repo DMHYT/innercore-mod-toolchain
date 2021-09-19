@@ -308,12 +308,16 @@ def task_download_ndk_if_needed():
 @task("cleanupOutput")
 def task_cleanup_output():
 	def clean(p):
-		folders = [f for f in list(os.walk(p))[1:] if os.path.exists(f[0])]
-		for folder in folders:
-			if not folder[2]:
-				os.rmdir(folder[0])
-			else:
-				clean(folder[0])
+		_walk = lambda: [f for f in list(os.walk(p))[1:] if os.path.exists(f[0])]
+		for folder in _walk():
+			if len(folder[2]) > 0:
+				continue
+			if len(folder[1]) > 0:
+				for subfolder in folder[1]:
+					clean(os.path.join(folder[0], subfolder))
+				for folder2 in _walk():
+					if len(folder2[1]) == 0 and len(folder2[2]) == 0:
+						os.rmdir(folder2[0])
 	path = make_config.get_path("output")
 	if os.path.exists(path):
 		clean(path)
