@@ -280,8 +280,11 @@ def task_load_adb_and_bin():
 	def _load(path):
 		url = "https://github.com/DMHYT/innercore-development-cloud/blob/main/" + path + "?raw=true"
 		local_path = make_config.get_path("toolchain/" + path)
-		request.urlretrieve(url, filename=local_path)
-		print(path + " downloaded")
+		try:			
+			request.urlretrieve(url, filename=local_path)
+			print(path + " downloaded")
+		except PermissionError:
+			print(path + " was already downloaded")
 	print("downloading adb...")
 	_load("adb/AdbWinApi.dll")
 	_load("adb/AdbWinUsbApi.dll")
