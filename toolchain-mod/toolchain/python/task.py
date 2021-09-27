@@ -300,6 +300,19 @@ def task_load_adb_and_bin():
 	print("complete!")
 	return 0
 
+
+def task_download_gnustl_headers():
+	from zipfile import ZipFile
+	print("downloading gnustl shared headers")
+	url = "https://github.com/DMHYT/mobile-gnustl-headers/releases/download/000/stl.zip"
+	local_path = make_config.get_path("src/native/mystagri/shared_headers/stl.zip")
+	request.urlretrieve(url, filename=local_path)
+	with ZipFile(local_path, 'r') as zipp:
+		zipp.extractall(local_path[:-7])
+	os.remove(local_path)
+	print("complete!")
+	return 0
+
 @task("downloadNdkIfNeeded")
 def task_download_ndk_if_needed():
 	from native.native_setup import require_compiler_executable
