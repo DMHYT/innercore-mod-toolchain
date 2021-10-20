@@ -28,9 +28,10 @@ def setup_mod_info(make_file):
 
 
 def setup_launcher_js(make_file):
-	launcher_contents = "ConfigureMultiplayer({\n\t\
-		name: " + make_file["global"]["info"]["name"] + ",\n\t\
-		version: " + make_file["global"]["info"]["version"] + ",\n\t\
+	tab = "    "
+	launcher_contents = "ConfigureMultiplayer({\n" + tab + "\
+		name: \"" + make_file["global"]["info"]["name"] + "\",\n" + tab + "\
+		version: \"" + make_file["global"]["info"]["version"] + "\",\n" + tab +"\
 		isClientOnly: " + ("true" if make_file["global"]["info"]["clientside"] else "false") + "\n});\nLaunch();"
 	with open(make.get_path("src/launcher.js"), 'w') as file:
 		file.write(launcher_contents)
