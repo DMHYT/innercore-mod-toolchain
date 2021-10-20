@@ -5,7 +5,6 @@
 			"shared_headers"
 		]
     },
-
     "depends": [
     	"innercore",
     	"nativejs"

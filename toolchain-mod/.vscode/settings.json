@@ -21,5 +21,8 @@
         "toolchain/build/lock": true,
         "toolchain/*.bat": true,
         "**/*.log": true
-    }
+    },
+    "java.project.referencedLibraries": [
+        "toolchain/classpath/*.jar"
+    ]
 }
