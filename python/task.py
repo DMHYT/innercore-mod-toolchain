@@ -3,6 +3,7 @@ import os.path
 import sys
 import time
 import urllib.request as request
+import shutil
 
 from utils import ensure_directory, ensure_file_dir, clear_directory, copy_file, copy_directory
 
@@ -10,6 +11,20 @@ make_config = None
 registered_tasks = {}
 locked_tasks = {}
 devnull = open(os.devnull, "w")
+
+
+def copytree(src, dst, symlinks=False, ignore=None):
+    if not os.path.exists(src) or os.path.isfile(src):
+        raise Exception()
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            if not os.path.exists(d):
+                os.mkdir(d)
+            copytree(s, d, symlinks, ignore)
+        else:
+            shutil.copy2(s, d)
 
 
 def get_make_config():
@@ -305,11 +320,15 @@ def task_download_innercore_headers():
 	try:
 		from zipfile import ZipFile
 		print("downloading innercore native headers...")
-		url = "https://codeload.github.com/DMHYT/innercore-native-headers/zip/master"
+		url = "https://codeload.github.com/DMHYT/innercore-native-headers/zip/main"
 		local_path = make_config.get_path("toolchain/stdincludes/archive.zip")
 		request.urlretrieve(url, filename=local_path)
 		with ZipFile(local_path, 'r') as zipp:
-			zipp.extract(member="horizon", path=local_path[:-12])
+			zipp.extractall(path=local_path[:-12])
+		dist = make_config.get_path("toolchain/stdincludes")
+		shit = os.path.join(dist, "innercore-native-headers-main")
+		copytree(os.path.join(shit, "horizon"), dist)
+		shutil.rmtree(shit)
 		os.remove(local_path)
 		print("complete!")
 	except: pass
@@ -324,7 +343,14 @@ def task_download_gnustl_headers():
 		local_path = make_config.get_path("toolchain/stdincludes/gnustl/archive.zip")
 		request.urlretrieve(url, filename=local_path)
 		with ZipFile(local_path, 'r') as zipp:
-			zipp.extract(member="stl", path=local_path[:-12])
+			zipp.extractall(path=local_path[:-12])
+		dist = make_config.get_path("toolchain/stdincludes/gnustl")
+		shit = os.path.join(dist, "mobile-gnustl-headers-master")
+		stl = os.path.join(dist, "stl")
+		if not os.path.exists(stl):
+			os.mkdir(stl)
+		copytree(os.path.join(shit, "stl"), stl)
+		shutil.rmtree(shit)
 		os.remove(local_path)
 		print("complete!")
 	except: pass
