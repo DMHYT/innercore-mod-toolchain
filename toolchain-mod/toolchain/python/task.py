@@ -300,21 +300,35 @@ def task_load_adb_and_bin():
 	print("complete!")
 	return 0
 
+@task("downloadICHeaders")
+def task_download_innercore_headers():
+	try:
+		from zipfile import ZipFile
+		print("downloading innercore native headers...")
+		url = "https://codeload.github.com/DMHYT/innercore-native-headers/zip/master"
+		local_path = make_config.get_path("toolchain/stdincludes/archive.zip")
+		request.urlretrieve(url, filename=local_path)
+		with ZipFile(local_path, 'r') as zipp:
+			zipp.extract(member="horizon", path=local_path[:-12])
+		os.remove(local_path)
+		print("complete!")
+	except: pass
+	return 0
+
 @task("downloadGnustlHeaders")
 def task_download_gnustl_headers():
 	try:
 		from zipfile import ZipFile
-		print("downloading gnustl shared headers")
-		url = "https://github.com/DMHYT/mobile-gnustl-headers/releases/download/000/stl.zip"
-		local_path = make_config.get_path("src/native/mystagri/shared_headers/stl.zip")
+		print("downloading gnustl shared headers...")
+		url = "https://codeload.github.com/DMHYT/mobile-gnustl-headers/zip/master"
+		local_path = make_config.get_path("toolchain/stdincludes/gnustl/archive.zip")
 		request.urlretrieve(url, filename=local_path)
 		with ZipFile(local_path, 'r') as zipp:
-			zipp.extractall(local_path[:-7])
+			zipp.extract(member="stl", path=local_path[:-12])
 		os.remove(local_path)
 		print("complete!")
-		return 0
-	except:
-		pass
+	except: pass
+	return 0
 
 @task("downloadNdkIfNeeded")
 def task_download_ndk_if_needed():

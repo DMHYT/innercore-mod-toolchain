@@ -27,6 +27,6 @@ rhino-1.7.7.jar
 toolchain/adb
 toolchain/bin
 
-# Change `sample` to your native module name
-src/native/sample/shared_headers/**
-!src/native/sample/shared_headers/.placeholder
+toolchain/stdincludes/horizon
+toolchain/stdincludes/gnustl/**
+!toolchain/stdincludes/gnustl/.placeholder

@@ -1,3 +1,3 @@
 @echo off
 cd python
-python task.py loadDocs loadJavaDependencies loadAdbAndBin downloadGnustlHeaders downloadNdkIfNeeded
+python task.py loadDocs loadJavaDependencies loadAdbAndBin downloadICHeaders downloadGnustlHeaders downloadNdkIfNeeded
