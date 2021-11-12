@@ -5,12 +5,8 @@
         "**/__pycache__/**": true,
         "**/tsconfig.json": true,
         ".vscode": true,
-        ".settings/**": true,
-        ".project": true,
         ".gitignore": true,
-        ".gitattributes": true,
         ".classpath": true,
-        ".idea/**": true,
         "toolchain/ndk": true,
         "toolchain/stdincludes": true,
         "toolchain/classpath": true,
@@ -19,7 +15,6 @@
         "toolchain/build/gcc": true,
         "toolchain/build/gradle": true,
         "toolchain/build/lock": true,
-        "toolchain/*.bat": true,
         "**/*.log": true
     },
     "java.project.referencedLibraries": [

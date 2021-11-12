@@ -30,3 +30,6 @@ toolchain/bin
 toolchain/stdincludes/horizon
 toolchain/stdincludes/gnustl/**
 !toolchain/stdincludes/gnustl/.placeholder
+
+toolchain/*.bat
+toolchain/python
