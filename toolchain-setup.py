@@ -66,5 +66,8 @@ else:
 
 download_and_extract_toolchain(directory)
 
+initialize_environment_script = os.path.join(directory, "initialize_environment.py")
+call(get_python() + " " + initialize_environment_script, shell=True)
+
 setup_script = os.path.join(directory, "toolchain", "python", "setup.py")
 call(get_python() + " " + setup_script + " " + directory + " " + os.path.join(directory, "project.back"), shell=True)
