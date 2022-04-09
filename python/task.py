@@ -244,7 +244,7 @@ def stop_horizon():
 @task("loadDocs")
 def task_load_docs():
 	def _load(name, fromDocs=True, fileName=None):
-		url = ("https://docs.mineprogramming.org/" + name + ".d.ts") if fromDocs else name
+		url = ("https://docs.mineprogramming.org/headers/" + name + ".d.ts") if fromDocs else name
 		response = request.urlopen(url)
 		content = response.read().decode('utf-8')
 		if fileName == None:
