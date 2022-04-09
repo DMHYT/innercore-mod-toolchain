@@ -325,7 +325,7 @@ def task_download_innercore_headers():
 		request.urlretrieve(url, filename=local_path)
 		with ZipFile(local_path, 'r') as zipp:
 			zipp.extractall(path=local_path[:-12])
-		dist = make_config.get_path("toolchain/stdincludes")
+		dist = make_config.get_path("toolchain/stdincludes/horizon")
 		shit = os.path.join(dist, "innercore-native-headers-main")
 		copytree(os.path.join(shit, "horizon"), dist)
 		shutil.rmtree(shit)
