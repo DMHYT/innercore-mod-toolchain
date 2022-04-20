@@ -342,13 +342,13 @@ def task_download_gnustl_headers():
 	try:
 		from zipfile import ZipFile
 		print("downloading gnustl shared headers...")
-		url = "https://codeload.github.com/DMHYT/mobile-gnustl-headers/zip/master"
+		url = "https://codeload.github.com/zheka2304/gnustl-shared-headers/zip/master"
 		local_path = make_config.get_path("toolchain/stdincludes/gnustl/archive.zip")
 		request.urlretrieve(url, filename=local_path)
 		with ZipFile(local_path, 'r') as zipp:
 			zipp.extractall(path=local_path[:-12])
 		dist = make_config.get_path("toolchain/stdincludes/gnustl")
-		shit = os.path.join(dist, "mobile-gnustl-headers-master")
+		shit = os.path.join(dist, "gnustl-shared-headers-master")
 		stl = os.path.join(dist, "stl")
 		if not os.path.exists(stl):
 			os.mkdir(stl)
