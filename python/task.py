@@ -120,6 +120,12 @@ def task_compile_native_release():
 	return compile_all_using_make_config(abis)
 
 
+@task("clearGradleCache", lock=["java", "cleanup", "push"])
+def task_clear_gradle_cache():
+	from java.java_build import clear_gradle_cache_directory
+	return clear_gradle_cache_directory()
+
+
 @task("compileJavaDebug", lock=["java", "cleanup", "push"])
 def task_compile_java_debug():
 	from java.java_build import compile_all_using_make_config
