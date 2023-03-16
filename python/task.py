@@ -250,7 +250,7 @@ def stop_horizon():
 @task("loadDocs")
 def task_load_docs():
 	def _load(name, fromDocs=True, fileName=None):
-		url = ("https://docs.mineprogramming.org/" + name + ".d.ts") if fromDocs else name
+		url = ("https://docs.mineprogramming.org/headers/" + name + ".d.ts") if fromDocs else name
 		response = request.urlopen(url)
 		content = response.read().decode('utf-8')
 		if fileName == None:
@@ -333,7 +333,10 @@ def task_download_innercore_headers():
 			zipp.extractall(path=local_path[:-12])
 		dist = make_config.get_path("toolchain/stdincludes")
 		shit = os.path.join(dist, "innercore-native-headers-main")
-		copytree(os.path.join(shit, "horizon"), dist)
+		dist2 = os.path.join(dist, "horizon")
+		if not os.path.exists(dist2):
+			os.mkdir(dist2)
+		copytree(os.path.join(shit, "horizon"), dist2)
 		shutil.rmtree(shit)
 		os.remove(local_path)
 		print("complete!")
@@ -345,13 +348,13 @@ def task_download_gnustl_headers():
 	try:
 		from zipfile import ZipFile
 		print("downloading gnustl shared headers...")
-		url = "https://codeload.github.com/DMHYT/mobile-gnustl-headers/zip/master"
+		url = "https://codeload.github.com/zheka2304/gnustl-shared-headers/zip/master"
 		local_path = make_config.get_path("toolchain/stdincludes/gnustl/archive.zip")
 		request.urlretrieve(url, filename=local_path)
 		with ZipFile(local_path, 'r') as zipp:
 			zipp.extractall(path=local_path[:-12])
 		dist = make_config.get_path("toolchain/stdincludes/gnustl")
-		shit = os.path.join(dist, "mobile-gnustl-headers-master")
+		shit = os.path.join(dist, "gnustl-shared-headers-master")
 		stl = os.path.join(dist, "stl")
 		if not os.path.exists(stl):
 			os.mkdir(stl)
