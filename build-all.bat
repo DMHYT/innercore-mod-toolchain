@@ -1,3 +1,3 @@
 @echo off
 cd python
-python task.py clearOutput buildScripts buildResources compileNativeDebug compileJavaDebug buildAdditional buildInfo cleanupOutput
+python task.py clearOutput buildScripts buildResources compileNativeDebug clearGradleCache compileJavaDebug buildAdditional buildInfo cleanupOutput
