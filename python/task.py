@@ -269,20 +269,15 @@ def task_load_docs():
 
 @task("loadJavaDependencies")
 def task_load_java_dependencies():
-	def _load(name):
-		url = "https://github.com/DMHYT/innercore-development-cloud/blob/main/classpath/" + name + ".jar?raw=true"
-		local_path = make_config.get_path("toolchain/classpath/" + name + ".jar")
+	classpath_directory = get_make_config().get_path("toolchain/classpath")
+	if os.path.exists(classpath_directory):
+		os.remove(classpath_directory) if os.path.isfile(classpath_directory) else shutil.rmtree(classpath_directory)
+	os.mkdir(classpath_directory)
+	for jar_name in ("android", "horizon", "innercore"):
+		url = "https://github.com/DMHYT/innercore-development-cloud/blob/classpath/" + jar_name + ".jar?raw=true"
+		local_path = os.path.join(classpath_directory, jar_name + ".jar")
 		request.urlretrieve(url, filename=local_path)
-		print(name + ".jar downloaded")
-	print("downloading java dependencies...")
-	_load("android-support-multidex")
-	_load("android-support-v4")
-	_load("android-support-v7-recyclerview")
-	_load("android")
-	_load("classes-dex2jar")
-	_load("classes2-dex2jar")
-	_load("horizon-classes")
-	_load("rhino-1.7.7")
+		print(jar_name + ".jar downloaded")
 	print("complete!")
 	return 0
 
