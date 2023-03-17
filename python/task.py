@@ -4,6 +4,7 @@ import sys
 import time
 import urllib.request as request
 import shutil
+import zipfile
 
 from utils import ensure_directory, ensure_file_dir, clear_directory, copy_file, copy_directory
 
@@ -287,37 +288,25 @@ def task_load_java_dependencies():
 
 @task("loadAdbAndBin")
 def task_load_adb_and_bin():
-	adb = make_config.get_path("toolchain/adb")
-	if not os.path.exists(adb):
-		os.mkdir(adb)
-	bn = make_config.get_path("toolchain/bin")
-	if not os.path.exists(bn):
-		os.mkdir(bn)
-	if not os.path.exists(bn + "\\gradle"):
-		os.mkdir(bn + "\\gradle")
-		os.mkdir(bn + "\\gradle\\wrapper")
-	elif not os.path.exists(bn + "\\gradle\\wrapper"):
-		os.mkdir(bn + "\\gradle\\wrapper")
-	def _load(path):
-		url = "https://github.com/DMHYT/innercore-development-cloud/blob/main/" + path + "?raw=true"
-		local_path = make_config.get_path("toolchain/" + path)
-		try:			
-			request.urlretrieve(url, filename=local_path)
-			print(path + " downloaded")
-		except PermissionError:
-			print(path + " was already downloaded")
-	print("downloading adb...")
-	_load("adb/AdbWinApi.dll")
-	_load("adb/AdbWinUsbApi.dll")
-	_load("adb/adb.exe")
-	print("complete!")
-	print("downloading java tools...")
-	_load("bin/gradle/wrapper/gradle-wrapper.jar")
-	_load("bin/gradle/wrapper/gradle-wrapper.properties")
-	_load("bin/dx.jar")
-	_load("bin/fakeso.cpp")
-	_load("bin/gradlew")
-	_load("bin/gradlew.bat")
+	print("downloading ADB and java build tools...")
+	toolchain_path = make_config.get_path("toolchain")
+	for archive_name in ["adb", "bin"]:
+		d = os.path.join(toolchain_path, archive_name)
+		if os.path.exists(d):
+			os.remove(d) if os.path.isfile(d) else shutil.rmtree(d)
+		dz = d + ".zip"
+		if os.path.exists(dz):
+			os.remove(dz) if os.path.isfile(dz) else shutil.rmtree(dz)
+		archive_fname = archive_name + ".zip"
+		url = "https://github.com/DMHYT/innercore-development-cloud/blob/main/" + archive_fname + "?raw=true"
+		archive_path = os.path.join(toolchain_path, archive_fname)
+		request.urlretrieve(url, filename=archive_path)
+		print(archive_fname + " downloaded")
+		with zipfile.ZipFile(archive_path, 'r') as archive:
+			archive.extractall(toolchain_path)
+			print(archive_fname + " extracted to toolchain/" + archive_name + "/")
+		os.remove(archive_path)
+		print(archive_fname + " removed")
 	print("complete!")
 	return 0
 
