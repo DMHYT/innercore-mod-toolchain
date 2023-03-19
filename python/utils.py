@@ -64,3 +64,12 @@ def relative_path(directory, file):
 	else:
 		raise RuntimeError("file is not in a directory: file=" + file + " dir=" + directory)
 
+
+def remove_xml_whitespace(node) -> None:
+	from xml.dom.minidom import Node
+	for x in node.childNodes:
+		if x.nodeType == Node.TEXT_NODE:
+			if x.nodeValue:
+				x.nodeValue = x.nodeValue.strip()
+		elif x.nodeType == Node.ELEMENT_NODE:
+			remove_xml_whitespace(x)
