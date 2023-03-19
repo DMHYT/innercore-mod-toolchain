@@ -2,7 +2,7 @@ import os
 from os.path import join, exists, isdir, basename, isfile
 import sys
 import json
-from utils import clear_directory
+from utils import clear_directory, remove_xml_whitespace
 import zipfile
 from make_config import make_config as make
 
@@ -76,12 +76,14 @@ def init_java_and_native(make_file, directory):
 			import xml.etree.ElementTree as etree
 			import xml.dom.minidom as minidom
 			classpath = join(directory, ".classpath")
-			tree = etree.parse(classpath)
-			src_entry = etree.SubElement(tree.getroot(), "classpathentry")
+			tree = etree.parse(classpath).getroot()
+			src_entry = etree.SubElement(tree, "classpathentry")
 			src_entry.set("kind", "src")
 			src_entry.set("path", "src/java/" + module_name + "/src")
 			xmlstr = etree.tostring(tree, encoding="utf-8", xml_declaration=True)
-			xmlstr = minidom.parseString(xmlstr).toprettyxml(indent="    ")
+			xmldom = minidom.parseString(xmlstr)
+			remove_xml_whitespace(xmldom)
+			xmlstr = xmldom.toprettyxml(encoding="utf-8")
 			with open(classpath, 'w', encoding="utf-8") as classpath_file:
 				classpath_file.write(xmlstr)
 			
