@@ -422,6 +422,38 @@ def task_update_includes():
 			incl.create_tsconfig(os.path.join(temp_directory, os.path.basename(target_path)))
 	return 0
 
+@task("updateClasspath")
+def task_update_classpath():
+	import xml.etree.ElementTree as etree
+	import xml.dom.minidom as minidom
+	from utils import remove_xml_whitespace
+	make_json = get_make_config()
+	classpath = make_json.get_path(".classpath")
+	tree = etree.parse(classpath).getroot()
+	src_dirs_count = 0
+	for compileSource in make_json.get_value("compile"):
+		try:
+			if compileSource["type"] == "java":
+				for source_path in make_json.get_paths(compileSource["path"]):
+					src_entry = etree.SubElement(tree.getroot(), "classpathentry")
+					src_entry.set("kind", "src")
+					source_path = os.path.relpath(source_path, make_json.get_root_dir()).replace(os.path.sep, "/")
+					src_entry.set("path", source_path)
+					src_dirs_count += 1
+		except:
+			pass
+	xmlstr = etree.tostring(tree, encoding="utf-8", xml_declaration=True)
+	xmldom = minidom.parseString(xmlstr)
+	remove_xml_whitespace(xmldom)
+	xmlstr = xmldom.toprettyxml(encoding="utf-8")
+	with open(classpath, 'w', encoding="utf-8") as classpath_file:
+		classpath_file.write(xmlstr)
+	if src_dirs_count > 0:
+		print("verified " + src_dirs_count + " java source directories, successfully written them to .classpath")
+	else:
+		print("no java source directories verified")
+	return 0
+
 @task("connectToADB")
 def task_connect_to_adb():
 	import re
