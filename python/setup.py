@@ -76,10 +76,9 @@ def init_java_and_native(make_file, directory):
 			import xml.etree.ElementTree as etree
 			classpath = join(directory, ".classpath")
 			tree = etree.parse(classpath)
-			for classpathentry in tree.getroot():
-				if(classpathentry.attrib["kind"] == "src"):
-					classpathentry.attrib["path"] = "src/java/" + module_name + "/src"
-
+			src_entry = etree.SubElement(tree.getroot(), "classpathentry")
+			src_entry.set("kind", "src")
+			src_entry.set("path", "src/java/" + module_name + "/src")
 			tree.write(classpath, encoding="utf-8", xml_declaration=True)
 			
 		else:
