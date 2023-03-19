@@ -71,15 +71,19 @@ def init_java_and_native(make_file, directory):
 
 			os.rename(join(src_dir, "java", "sample"),
 				join(src_dir, "java", module_name))
-
+			
 			# write info to .classpath
 			import xml.etree.ElementTree as etree
+			import xml.dom.minidom as minidom
 			classpath = join(directory, ".classpath")
 			tree = etree.parse(classpath)
 			src_entry = etree.SubElement(tree.getroot(), "classpathentry")
 			src_entry.set("kind", "src")
 			src_entry.set("path", "src/java/" + module_name + "/src")
-			tree.write(classpath, encoding="utf-8", xml_declaration=True)
+			xmlstr = etree.tostring(tree, encoding="utf-8", xml_declaration=True)
+			xmlstr = minidom.parseString(xmlstr).toprettyxml(indent="    ")
+			with open(classpath, 'w', encoding="utf-8") as classpath_file:
+				classpath_file.write(xmlstr)
 			
 		else:
 			if(isfile(sample_java_archive)):
