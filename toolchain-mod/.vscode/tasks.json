@@ -26,6 +26,18 @@
 			}
 		},
 		{
+			"label": "Update .classpath",
+			"type": "shell",
+			"options": {
+				"cwd": ".\\toolchain\\python"
+			},
+			"command": "..\\update-classpath.bat",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
 			"label": "Assemble Mod for Release",
 			"type": "shell",
 			"options": {
