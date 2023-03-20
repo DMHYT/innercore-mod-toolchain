@@ -71,5 +71,7 @@ def remove_xml_whitespace(node) -> None:
 		if x.nodeType == Node.TEXT_NODE:
 			if x.nodeValue:
 				x.nodeValue = x.nodeValue.strip()
+				if x.nodeValue == "":
+					x.parentNode.removeChild(x)
 		elif x.nodeType == Node.ELEMENT_NODE:
 			remove_xml_whitespace(x)
