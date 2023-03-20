@@ -86,10 +86,8 @@ def init_java_and_native(make_file, directory):
 			xmlstr = xmldom.toprettyxml(encoding="utf-8")
 			with open(classpath, 'w', encoding="utf-8") as classpath_file:
 				classpath_file.write(xmlstr)
-			
-		else:
-			if(isfile(sample_java_archive)):
-				os.remove(sample_java_archive)
+		if(isfile(sample_java_archive)):
+			os.remove(sample_java_archive)
 
 
 def cleanup_if_required(directory):
