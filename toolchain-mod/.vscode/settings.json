@@ -9,7 +9,8 @@
         "toolchain/build/gcc": true,
         "toolchain/build/gradle": true,
         "toolchain/build/lock": true,
-        "**/*.log": true
+        "**/*.log": true,
+        ".settings": true
     },
     "java.project.referencedLibraries": [
         "toolchain/classpath/*.jar"
