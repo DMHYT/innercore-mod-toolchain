@@ -83,7 +83,7 @@ def init_java_and_native(make_file, directory):
 			xmlstr = etree.tostring(tree, encoding="utf-8", xml_declaration=True)
 			xmldom = minidom.parseString(xmlstr)
 			remove_xml_whitespace(xmldom)
-			xmlstr = xmldom.toprettyxml(encoding="utf-8")
+			xmlstr = xmldom.toprettyxml(encoding="utf-8").decode("utf-8")
 			with open(classpath, 'w', encoding="utf-8") as classpath_file:
 				classpath_file.write(xmlstr)
 		if(isfile(sample_java_archive)):
