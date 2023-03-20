@@ -282,12 +282,11 @@ def setup_gradle_project(output_dir, cache_dir, directories, classpath):
             """)
 
 
-def cleanup_gradle_scripts():
-    for directory in make_config.get_value("java.directories", []):
-        for path in make_config.get_paths(directory):
-            gradle_script = os.path.join(path, "build.gradle")
-            if os.path.isfile(gradle_script):
-                os.remove(gradle_script)
+def cleanup_gradle_scripts(directories):
+    for path in directories:
+        gradle_script = os.path.join(path, "build.gradle")
+        if os.path.isfile(gradle_script):
+            os.remove(gradle_script)
 
 
 def compile_all_using_make_config():
@@ -334,7 +333,7 @@ def compile_all_using_make_config():
             print(f"failed, clearing compiled directories {directories} ...")
             for directory_name in directory_names:
                 clear_directory(make_config.get_path("output/" + directory_name))
-    cleanup_gradle_scripts()
+    cleanup_gradle_scripts(directories)
 
     print(f"completed java build in {int((time.time() - start_time) * 100) / 100}s with result {overall_result} - {'OK' if overall_result == 0 else 'ERROR'}")
     return overall_result
