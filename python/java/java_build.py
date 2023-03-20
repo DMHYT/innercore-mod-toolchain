@@ -243,7 +243,7 @@ def setup_gradle_project(output_dir, cache_dir, directories, classpath):
                 if os.path.isdir(src_dir):
                     copy_directory(src_dir, os.path.join(dex_dir, source_dir), clear_dst=True)
 
-        with open(os.path.join(directory, "build.gradle"), "w") as build_file:
+        with open(os.path.join(directory, "build.gradle"), "w", encoding="utf-8") as build_file:
             build_file.write("""
                 plugins {
                     id 'com.github.johnrengelman.shadow' version '5.2.0'
