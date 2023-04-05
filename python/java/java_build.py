@@ -9,6 +9,7 @@ import shutil
 
 from utils import *
 from make_config import make_config
+from mod_structure import mod_structure
 
 
 def get_classpath_from_directories(directories):
@@ -199,6 +200,7 @@ def build_java_directories(directories, output_dir, cache_dir, classpath):
         if result != 0:
             print(f"failed to dex {directory_name} with code {result}")
             return result
+        mod_structure.new_build_target("java", directory_name + "{}")
 
     save_modified_classes_cache(cache_json, cache_dir)
     print('\033[1m' + '\033[92m' + "\n****SUCCESS****\n" + '\033[0m')
@@ -298,6 +300,7 @@ def compile_all_using_make_config():
     cache_dir = make_config.get_path("toolchain/build/gradle")
     ensure_directory(output_dir)
     ensure_directory(cache_dir)
+    mod_structure.cleanup_build_target("java")
 
     directories = []
     directory_names = []
@@ -335,6 +338,7 @@ def compile_all_using_make_config():
                 clear_directory(make_config.get_path("output/" + directory_name))
     cleanup_gradle_scripts(directories)
 
+    mod_structure.update_build_config_list("javaDirs")
     print(f"completed java build in {int((time.time() - start_time) * 100) / 100}s with result {overall_result} - {'OK' if overall_result == 0 else 'ERROR'}")
     return overall_result
 
