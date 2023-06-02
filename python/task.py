@@ -430,6 +430,8 @@ def task_update_classpath():
 	from utils import remove_xml_whitespace
 	make_json = get_make_config()
 	classpath = make_json.get_path(".classpath")
+	if not os.path.exists(classpath):
+		return 0
 	tree = etree.parse(classpath).getroot()
 	for node in tree:
 		if node.attrib["kind"] == "src":
