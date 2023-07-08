@@ -270,13 +270,15 @@ def task_load_docs():
 @task("loadJavaDependencies")
 def task_load_java_dependencies():
 	classpath_directory = get_make_config().get_path("toolchain/classpath")
-	if os.path.exists(classpath_directory):
-		os.remove(classpath_directory) if os.path.isfile(classpath_directory) else shutil.rmtree(classpath_directory)
-	os.mkdir(classpath_directory)
-	with open(os.path.join(classpath_directory, ".placeholder"), 'x'): pass
+	if os.path.exists(classpath_directory) and os.path.isfile(classpath_directory):
+		os.remove(classpath_directory)
+		os.mkdir(classpath_directory)
+		with open(os.path.join(classpath_directory, ".placeholder"), 'x'): pass
 	for jar_name in ("android", "horizon", "innercore"):
 		url = "https://github.com/DMHYT/innercore-development-cloud/blob/classpath/" + jar_name + ".jar?raw=true"
 		local_path = os.path.join(classpath_directory, jar_name + ".jar")
+		if os.path.exists(local_path):
+			os.remove(local_path)
 		request.urlretrieve(url, filename=local_path)
 		print(jar_name + ".jar downloaded")
 	print("complete!")
