@@ -256,7 +256,7 @@ def task_load_docs():
 		content = response.read().decode('utf-8')
 		if fileName == None:
 			fileName = name
-		with open(make_config.get_path("toolchain/declarations/" + fileName + ".d.ts"), 'w') as docs:
+		with open(make_config.get_path("toolchain/declarations/" + fileName + ".d.ts"), 'w', encoding="utf-8") as docs:
 			docs.write(content)
 		print(fileName + ".d.ts downloaded")
 	print("downloading ts declarations...")
